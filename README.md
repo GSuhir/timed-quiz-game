@@ -1,1 +1,2 @@
-# timed-quiz-game
+# Timed Quiz Game
+
