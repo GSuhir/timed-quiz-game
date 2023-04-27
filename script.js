@@ -78,7 +78,6 @@ function startQuiz() {
 
 var currentQuestion = 0;
   var questionEl = document.createElement("h2");
-//   var choicesEl = document.createElement("div");
   var quizEl = document.createElement("div");
 
   quizEl.id = "quiz";
