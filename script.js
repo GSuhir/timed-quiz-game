@@ -30,7 +30,6 @@ var questions = [
 
 
 
-//Make event listener that when user pushes the Lets Boogie button will hide everything except the welcome message:
 
 function startQuiz() {
     var geneMessage = document.querySelector("h1");
@@ -52,15 +51,34 @@ function startQuiz() {
     var timerId = setInterval(function() {
     timeLeft--;
     timerEl.textContent = "Time left: " + timeLeft + " seconds";
-    if (timeLeft === 0) {
+    if (timeLeft <= 0) {
         clearInterval(timerId);
-        timerEl.textContent = "Game Over!";
+        timerEl.textContent = "Time's Up! Game Over!";
+        var quizEl = document.getElementById("quiz");
+        quizEl.style.display = "none";
+
+        var gameOverMsg = document.createElement("h2");
+        gameOverMsg.textContent = "Game Over!";
+        body.appendChild(gameOverMsg);
+
+        var initials = prompt ("Please enter your initials to save for all time:");
+        var score = 0;
+        
+        localStorage.setItem("initials", initials);
+        localStorage.setItem("score", score);
+
+        var scoreMsg = document.createElement("p")
+        scoreMsg.classList.add("results")
+        scoreMsg.textContent = "Your final score is 0";
+        body.appendChild(scoreMsg);
+        
+
         }
   }, 1000);
 
 var currentQuestion = 0;
   var questionEl = document.createElement("h2");
-  var choicesEl = document.createElement("div");
+//   var choicesEl = document.createElement("div");
   var quizEl = document.createElement("div");
 
   quizEl.id = "quiz";
@@ -70,13 +88,16 @@ var currentQuestion = 0;
   function displayQuestion() {
     var question = questions[currentQuestion];
     questionEl.textContent = question.question;
+
     var choicesEl = document.createElement("div");
+    choicesEl.textContent = ""; // Clear previous answer choices
     quizEl.appendChild(choicesEl);
-    choicesEl.innerHTML = ""; // Clear previous answer choices
+    
   
     question.choices.forEach(function(answer) {
       var answerBtn = document.createElement("button");
       answerBtn.textContent = answer;
+      answerBtn.classList.add("answer-btn");
       answerBtn.onclick = function() {
         // Check if answer is correct and handle accordingly
         if (answer === question.answer) {
@@ -96,6 +117,29 @@ var currentQuestion = 0;
             var gameOverMsg = document.createElement("h2");
             gameOverMsg.textContent = "Congratulations! You completed the quiz!";
             body.appendChild(gameOverMsg);
+
+          
+            
+            if (currentQuestion === questions.length) {
+                // Quiz is over
+                clearInterval(timerId);
+                quizEl.style.display = "none";
+                var gameOverMsg = document.createElement("h2");
+                gameOverMsg.textContent = "";
+                body.appendChild(gameOverMsg);
+            
+                var scoreMsg = document.createElement("p")
+                scoreMsg.classList.add("results")
+                scoreMsg.textContent = "Your final score is 5, and you had " + timeLeft + " seconds left!";
+                body.appendChild(scoreMsg);
+
+                var initials = prompt("Please enter your initials to save for all time:");
+                var score = timeLeft;
+            
+                // Store initials and score in local storage
+                localStorage.setItem("initials", initials);
+                localStorage.setItem("score", score);
+              }
           }
         } else {
           // Answer is incorrect
