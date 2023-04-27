@@ -21,9 +21,9 @@ var questions = [
         answer: "Content-Padding-Border-Margin"  
     },
     {
-        question: "Which of the following should NOT be included in the <head> element of HTML?",
-        choices: ["Title of the webpage", "Link to style.css", "Link to script.js", "Meta information such as character set"],
-        answer: "Link to script.js"  
+        question: "Because all these answers are appearing, what could I NOT get to work properly on this page?",
+        choices: ["Alert Window", "For Loop", "Local Storage", "jQuery"],
+        answer: "For Loop"  
     }
 ]
 
@@ -83,6 +83,38 @@ var currentQuestion = 0;
   quizEl.id = "quiz";
   quizEl.appendChild(questionEl);
   body.appendChild(quizEl);
+
+function displayQuestion() {
+  // get the current question object
+  var currentQuestion = questions[currentQuestionIndex];
+
+  // display the question text
+  questionText.innerText = currentQuestion.question;
+
+  // clear any previous answer choices
+  answerChoices.innerHTML = "";
+
+  // loop through the answer choices and display them
+  for (var i = 0; i < currentQuestion.choices.length; i++) {
+    var choice = currentQuestion.choices[i];
+
+    // create a new answer choice div
+    var choiceDiv = document.createElement("div");
+    choiceDiv.classList.add("choice");
+    choiceDiv.innerText = choice;
+
+    // add a click event listener to the answer choice div
+    choiceDiv.addEventListener("click", function() {
+      // check if the answer is correct
+      if (this.innerText === currentQuestion.answer) {
+        this.classList.add("correct"); // add the "correct" class
+      }
+    });
+
+    // add the answer choice div to the answerChoices div
+    answerChoices.appendChild(choiceDiv);
+  }
+}
 
   function displayQuestion() {
     var question = questions[currentQuestion];
