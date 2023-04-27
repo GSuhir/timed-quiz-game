@@ -1,5 +1,5 @@
 //Make questions and answers in an array
-var Questions = [
+var questions = [
     {
         question: "In javascript, what is the operator that decreases a value of a numeric variable by 1?",
         choices: ["Increment", "Decrement", "Excrement", "Deviant"],
@@ -23,83 +23,94 @@ var Questions = [
     {
         question: "Which of the following should NOT be included in the <head> element of HTML?",
         choices: ["Title of the webpage", "Link to style.css", "Link to script.js", "Meta information such as character set"],
-        answer: "Decrement"  
+        answer: "Link to script.js"  
     }
 ]
 
 
-//Variables for score and question index
-let score = 0;
-let questionIndex = 0;
 
 
-//Variables for HTL elements
-var startButton = document.getElementById("start-btn");
-var quizQuestions = document.getElementById("quiz-questions");
-var resultsContainer = document.getElementById("results");
-var submitInitialsForm = document.getElementById("submit-initials");
-
-//Start timer with setInterval().  Count down from 1 minute.  Subtract 10 seconds when question is wrong.
-
-let timeLeft = 60;
-let timerInterval;
-
-function startTimer() {
-    timerInterval = setInterval (() => {
-        timeLeft--;
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            endGame();
-        
-        }
-    }, 1000);
-}
-
-//Put up the questions, and start timer
+//Make event listener that when user pushes the Lets Boogie button will hide everything except the welcome message:
 
 function startQuiz() {
-    document.getElementById("start-btn").style.display = "hidden";
-    document.getElementById("quiz-questions").style.display = "block";
-    startTimer();
-    displayQuestion(0);
+    var geneMessage = document.querySelector("h1");
+    var welcomeText = document.querySelector("h2");
+    var welcomeText2 = document.querySelector("h3");
+    var button = document.querySelector("#start-btn");
+    var body = document.querySelector("body");
+
+    geneMessage.style.display = "none"
+    welcomeText.style.display = "none";
+    welcomeText2.style.display = "none";
+    button.style.display = "none";
+
+    var timerEl = document.createElement("div");
+    timerEl.id = "timer";
+    body.appendChild(timerEl);
+        
+    var timeLeft = 60; 
+    var timerId = setInterval(function() {
+    timeLeft--;
+    timerEl.textContent = "Time left: " + timeLeft + " seconds";
+    if (timeLeft === 0) {
+        clearInterval(timerId);
+        timerEl.textContent = "Game Over!";
+        }
+  }, 1000);
+
+var currentQuestion = 0;
+  var questionEl = document.createElement("h2");
+  var choicesEl = document.createElement("div");
+  var quizEl = document.createElement("div");
+
+  quizEl.id = "quiz";
+  quizEl.appendChild(questionEl);
+  body.appendChild(quizEl);
+
+  function displayQuestion() {
+    var question = questions[currentQuestion];
+    questionEl.textContent = question.question;
+    var choicesEl = document.createElement("div");
+    quizEl.appendChild(choicesEl);
+    choicesEl.innerHTML = ""; // Clear previous answer choices
+  
+    question.choices.forEach(function(answer) {
+      var answerBtn = document.createElement("button");
+      answerBtn.textContent = answer;
+      answerBtn.onclick = function() {
+        // Check if answer is correct and handle accordingly
+        if (answer === question.answer) {
+          // Answer is correct
+          var correctMsg = document.createElement("p");
+          correctMsg.textContent = "Correct!";
+          choicesEl.appendChild(correctMsg);
+  
+          // Move on to the next question
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            displayQuestion();
+          } else {
+            // Quiz is over
+            clearInterval(timerId);
+            quizEl.style.display = "none";
+            var gameOverMsg = document.createElement("h2");
+            gameOverMsg.textContent = "Congratulations! You completed the quiz!";
+            body.appendChild(gameOverMsg);
+          }
+        } else {
+          // Answer is incorrect
+          timeLeft -= 10; // Take off 10 seconds from the timer
+          if (timeLeft < 0) {
+            timeLeft = 0;
+          }
+          timerEl.textContent = "Time left: " + timeLeft + " seconds";
+        }
+      };
+      choicesEl.appendChild(answerBtn);
+    });
+  }
+  displayQuestion();
 }
 
-
-function displayQuestion(index)  {
-    var quizQuestions = document.getElementById("quiz-questions");
-    quizQuestions.textContent="";
-
-    var question = Questions[index];
-    var questionTitle = document.createElement("h3");
-    questionTitle.textContent = question.question;
-    quizQuestions.appendChild(questionTitle);
-
-    for (var i = 0; i < question.choices.length; i++) {
-        var choice = question.choices[i];
-        var button = document.createElement("button");
-        button.textContent = choice;
-        button.setAttribute("data-answer", choice);
-        button.onclick = function() {
-          var userAnswer = this.getAttribute("data-answer");
-          if (userAnswer === question.answer) {
-            score++;
-          } else {
-            timeLeft -=10;
-          }
-          index++;
-          if (index < Questions.length) {
-            displayQuestion(index);
-          } else {
-            endGame();
-          }
-        }
-        questionContainer.appendChild(button);
-      }
-    }
-
-
-
-
-startButton.addEventListener("click", startQuiz);
-
+var startBtn = document.getElementById("start-btn");
+startBtn.addEventListener("click", startQuiz);
