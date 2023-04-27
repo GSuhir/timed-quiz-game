@@ -84,38 +84,6 @@ var currentQuestion = 0;
   quizEl.appendChild(questionEl);
   body.appendChild(quizEl);
 
-function displayQuestion() {
-  // get the current question object
-  var currentQuestion = questions[currentQuestionIndex];
-
-  // display the question text
-  questionText.innerText = currentQuestion.question;
-
-  // clear any previous answer choices
-  answerChoices.innerHTML = "";
-
-  // loop through the answer choices and display them
-  for (var i = 0; i < currentQuestion.choices.length; i++) {
-    var choice = currentQuestion.choices[i];
-
-    // create a new answer choice div
-    var choiceDiv = document.createElement("div");
-    choiceDiv.classList.add("choice");
-    choiceDiv.innerText = choice;
-
-    // add a click event listener to the answer choice div
-    choiceDiv.addEventListener("click", function() {
-      // check if the answer is correct
-      if (this.innerText === currentQuestion.answer) {
-        this.classList.add("correct"); // add the "correct" class
-      }
-    });
-
-    // add the answer choice div to the answerChoices div
-    answerChoices.appendChild(choiceDiv);
-  }
-}
-
   function displayQuestion() {
     var question = questions[currentQuestion];
     questionEl.textContent = question.question;
