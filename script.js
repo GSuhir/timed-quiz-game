@@ -1,4 +1,4 @@
-//Make questions and answers in an array
+//Declare objects in an array that will ultimately become my questions, choices, and correct responses
 var questions = [
     {
         question: "In javascript, what is the operator that decreases a value of a numeric variable by 1?",
@@ -27,10 +27,7 @@ var questions = [
     }
 ]
 
-
-
-
-
+//Starts the quiz, grabs elements from HTML which then I want to disappear upon launching the quiz
 function startQuiz() {
     var geneMessage = document.querySelector("h1");
     var welcomeText = document.querySelector("h2");
@@ -43,6 +40,7 @@ function startQuiz() {
     welcomeText2.style.display = "none";
     button.style.display = "none";
 
+    //create a timer and set parameters
     var timerEl = document.createElement("div");
     timerEl.id = "timer";
     body.appendChild(timerEl);
@@ -76,6 +74,7 @@ function startQuiz() {
         }
   }, 1000);
 
+  //Create div in body of HTML to put up questions.
 var currentQuestion = 0;
   var questionEl = document.createElement("h2");
   var quizEl = document.createElement("div");
@@ -84,6 +83,7 @@ var currentQuestion = 0;
   quizEl.appendChild(questionEl);
   body.appendChild(quizEl);
 
+  //Start bringing questions up one by one
   function displayQuestion() {
     var question = questions[currentQuestion];
     questionEl.textContent = question.question;
@@ -92,13 +92,13 @@ var currentQuestion = 0;
     choicesEl.textContent = ""; // Clear previous answer choices
     quizEl.appendChild(choicesEl);
     
-  
+  //Make buttons for answer choices
     question.choices.forEach(function(answer) {
       var answerBtn = document.createElement("button");
       answerBtn.textContent = answer;
       answerBtn.classList.add("answer-btn");
       answerBtn.onclick = function() {
-        // Check if answer is correct and handle accordingly
+        // Check if answer is correct say "Correct!" if it is"
         if (answer === question.answer) {
           // Answer is correct
           var correctMsg = document.createElement("p");
@@ -110,7 +110,7 @@ var currentQuestion = 0;
           if (currentQuestion < questions.length) {
             displayQuestion();
           } else {
-            // Quiz is over
+            // Stop the timer when quiz is over
             clearInterval(timerId);
             quizEl.style.display = "none";
             var gameOverMsg = document.createElement("h2");
@@ -120,7 +120,7 @@ var currentQuestion = 0;
           
             
             if (currentQuestion === questions.length) {
-                // Quiz is over
+                // Give "Game Over" message to someone who completed all 5 questions.
                 clearInterval(timerId);
                 quizEl.style.display = "none";
                 var gameOverMsg = document.createElement("h2");
@@ -135,14 +135,14 @@ var currentQuestion = 0;
                 var initials = prompt("Please enter your initials to save for all time:");
                 var score = timeLeft;
             
-                // Store initials and score in local storage
+                // Put initials into local storage
                 localStorage.setItem("initials", initials);
                 localStorage.setItem("score", score);
               }
           }
         } else {
-          // Answer is incorrect
-          timeLeft -= 10; // Take off 10 seconds from the timer
+          // When wrong answer is given, take 10 seconds off the timer
+          timeLeft -= 10; 
           if (timeLeft < 0) {
             timeLeft = 0;
           }
@@ -154,6 +154,6 @@ var currentQuestion = 0;
   }
   displayQuestion();
 }
-
+//Adds event listener to start button that I called "Let's Boogie"
 var startBtn = document.getElementById("start-btn");
 startBtn.addEventListener("click", startQuiz);
